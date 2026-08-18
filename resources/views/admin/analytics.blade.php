@@ -6,13 +6,13 @@
 @section('content')
 
 <div x-data=\"{ helpOpen: false }\">
-    <div class=\"flex items-center justify-between mb-6 md:hidden\">
-        <h3 class=\"text-sm font-semibold text-gray-700\">AI System Performance</h3>
-        <button @click=\"helpOpen = !helpOpen\" class=\"flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 hover:bg-primary-100 text-primary-600 flex items-center justify-center transition\" title=\"Info\">
-            <x-heroicon-o-information-circle class=\"w-5 h-5\" />
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="text-sm font-semibold text-gray-700 hidden md:block">AI System Performance</h3>
+        <button @click="helpOpen = !helpOpen" class="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 hover:bg-primary-100 text-primary-600 flex items-center justify-center transition" title="Info">
+            <x-heroicon-o-information-circle class="w-5 h-5" />
         </button>
     </div>
-    <div x-show=\"helpOpen\" class=\"md:hidden mb-4 p-4 bg-primary-50 border border-primary-200 rounded-xl text-xs text-primary-700\">
+    <div x-show="helpOpen" class="mb-4 p-4 bg-primary-50 border border-primary-200 rounded-xl text-xs md:text-sm text-primary-700">
         View real-time AI request analytics, performance metrics, and recent request logs.
     </div>
 
@@ -48,14 +48,14 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 class="text-sm font-semibold text-gray-700 mb-4">Requests — Last 7 Days</h3>
-            <div class="w-full h-64 md:h-96">
-                <canvas id="dailyUsageChart" height="90"></canvas>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="dailyUsageChart"></canvas>
             </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 class="text-sm font-semibold text-gray-700 mb-4">Status Breakdown</h3>
-            <div class="w-full h-64">
-                <canvas id="statusChart" height="200"></canvas>
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="statusChart"></canvas>
             </div>
         </div>
     </div>
@@ -66,7 +66,8 @@
         <div class="px-5 py-4 border-b border-gray-50">
             <h3 class="text-sm font-semibold text-gray-700">Recent AI Requests</h3>
         </div>
-        <table class="w-full text-sm">
+        <div class="overflow-x-auto">
+        <table class="w-full text-sm whitespace-nowrap">
             <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
                     <th class="text-left px-5 py-3 font-medium">User</th>
@@ -104,11 +105,13 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     @push('scripts')
     <script>
-        new Chart(document.getElementById('dailyUsageChart'), {
+        const dailyCtx = document.getElementById('dailyUsageChart').getContext('2d');
+        new Chart(dailyCtx, {
             type: 'bar',
             data: {
                 labels: @json($chartLabels),
@@ -121,12 +124,14 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
             }
         });
 
-        new Chart(document.getElementById('statusChart'), {
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
             type: 'doughnut',
             data: {
                 labels: {!! json_encode($statusBreakdown->keys()) !!},
@@ -137,11 +142,11 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
             }
         });
     </script>
-    {{-- @formatter:off --}}
     @endpush
 
 @endsection

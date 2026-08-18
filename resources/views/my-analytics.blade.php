@@ -59,16 +59,20 @@
 
     {{-- Chart --}}
     <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <h3 class="text-sm font-semibold text-gray-700 mb-4">Tasks Completed per Month</h3>
-        <div class="w-full h-64 md:h-96">
-            <canvas id="monthlyChart" height="90"></canvas>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-700">Tasks Completed per Month</h3>
+            <p class="text-xs text-gray-500">Last {{ $months }} months</p>
+        </div>
+        <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="monthlyChart"></canvas>
         </div>
     </div>
 </div>
 
     @push('scripts')
     <script>
-        new Chart(document.getElementById('monthlyChart'), {
+        const ctx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: @json($chartLabels),
@@ -77,12 +81,20 @@
                     data: @json($chartData),
                     backgroundColor: '#7c6ff0',
                     borderRadius: 6,
+                    borderSkipped: false,
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                    x: { ticks: { font: { size: 11 } } }
+                }
             }
         });
     </script>
