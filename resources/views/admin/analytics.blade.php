@@ -5,8 +5,19 @@
 
 @section('content')
 
+<div x-data=\"{ helpOpen: false }\">
+    <div class=\"flex items-center justify-between mb-6 md:hidden\">
+        <h3 class=\"text-sm font-semibold text-gray-700\">AI System Performance</h3>
+        <button @click=\"helpOpen = !helpOpen\" class=\"flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 hover:bg-primary-100 text-primary-600 flex items-center justify-center transition\" title=\"Info\">
+            <x-heroicon-o-information-circle class=\"w-5 h-5\" />
+        </button>
+    </div>
+    <div x-show=\"helpOpen\" class=\"md:hidden mb-4 p-4 bg-primary-50 border border-primary-200 rounded-xl text-xs text-primary-700\">
+        View real-time AI request analytics, performance metrics, and recent request logs.
+    </div>
+
     {{-- Summary Cards --}}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class=\"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6\">
         <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
             <p class="text-2xl font-bold text-gray-800">{{ $totalRequests }}</p>
             <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
@@ -37,13 +48,18 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 class="text-sm font-semibold text-gray-700 mb-4">Requests — Last 7 Days</h3>
-            <canvas id="dailyUsageChart" height="90"></canvas>
+            <div class="w-full h-64 md:h-96">
+                <canvas id="dailyUsageChart" height="90"></canvas>
+            </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <h3 class="text-sm font-semibold text-gray-700 mb-4">Status Breakdown</h3>
-            <canvas id="statusChart" height="200"></canvas>
+            <div class="w-full h-64">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
         </div>
     </div>
+</div>
 
     {{-- Recent Requests --}}
     <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">

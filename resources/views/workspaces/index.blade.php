@@ -4,33 +4,42 @@
 @section('page-title', 'My Workspaces & Teams')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ helpOpen: false }">
     
     {{-- Header --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <div>
+    <div class="flex flex-col bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex items-start justify-between gap-2 mb-4">
             <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <x-heroicon-o-building-office-2 class="w-7 h-7 text-primary-600" />
                 My Workspaces & Teams
             </h1>
-            <p class="text-xs text-gray-500 mt-1">
-                Manage team workspaces, join existing teams with an invite code, or process member join/leave applications.
-            </p>
+            <button @click="helpOpen = !helpOpen" class="md:hidden flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 hover:bg-primary-100 text-primary-600 flex items-center justify-center transition" title="Info">
+                <x-heroicon-o-information-circle class="w-5 h-5" />
+            </button>
+        </div>
+        <p class="text-xs text-gray-500 mt-1 hidden md:block">
+            Manage team workspaces, join existing teams with an invite code, or process member join/leave applications.
+        </p>
+        <div x-show="helpOpen" class="md:hidden mt-3 p-3 bg-primary-50 border border-primary-200 rounded-lg text-xs text-primary-700">
+            Manage team workspaces, join existing teams with an invite code, or process member join/leave applications.
         </div>
 
-        {{-- Join via Code Quick Form --}}
-        <form action="{{ route('workspaces.join-by-code') }}" method="POST" class="flex items-center gap-2">
-            @csrf
-            <div class="relative">
-                <x-heroicon-o-key class="w-4 h-4 text-primary-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input type="text" name="invite_code" placeholder="Enter Invite Code (e.g. ABC12345)" required
-                    class="pl-9 pr-3.5 py-2.5 bg-white border border-primary-300 rounded-xl text-xs font-mono font-bold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 uppercase transition shadow-sm">
-            </div>
-            <button type="submit" class="px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl text-xs transition shadow flex items-center gap-1.5 whitespace-nowrap">
-                <x-heroicon-o-arrow-right-end-on-rectangle class="w-4 h-4" />
-                Join Workspace
-            </button>
-        </form>
+        <div class="mt-4">
+
+            {{-- Join via Code Quick Form --}}
+            <form action="{{ route('workspaces.join-by-code') }}" method="POST" class="flex flex-col md:flex-row md:items-center gap-2">
+                @csrf
+                <div class="relative flex-1 md:flex-initial">
+                    <x-heroicon-o-key class="w-4 h-4 text-primary-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input type="text" name="invite_code" placeholder="Enter Invite Code (e.g. ABC12345)" required
+                        class="w-full pl-9 pr-3.5 py-2.5 bg-white border border-primary-300 rounded-xl text-xs font-mono font-bold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 uppercase transition shadow-sm">
+                </div>
+                <button type="submit" class="w-full md:w-auto px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5 whitespace-nowrap">
+                    <x-heroicon-o-arrow-right-end-on-rectangle class="w-4 h-4" />
+                    Join Workspace
+                </button>
+            </form>
+        </div>
     </div>
 
     {{-- Alerts --}}
