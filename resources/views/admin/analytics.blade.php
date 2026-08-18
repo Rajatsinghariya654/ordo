@@ -67,23 +67,27 @@
             <h3 class="text-sm font-semibold text-gray-700">Recent AI Requests</h3>
         </div>
         <div class="overflow-x-auto">
-        <table class="w-full text-sm whitespace-nowrap">
+        <table class="w-full text-sm">
             <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
-                    <th class="text-left px-5 py-3 font-medium">User</th>
-                    <th class="text-left px-5 py-3 font-medium">Prompt</th>
-                    <th class="text-left px-5 py-3 font-medium">Status</th>
-                    <th class="text-left px-5 py-3 font-medium">Tokens</th>
-                    <th class="text-left px-5 py-3 font-medium">Time</th>
-                    <th class="text-left px-5 py-3 font-medium">When</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium">User</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium hidden md:table-cell">Prompt</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium">Status</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium hidden lg:table-cell">Tokens</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium hidden lg:table-cell">Time</th>
+                    <th class="text-left px-3 md:px-5 py-3 font-medium">When</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
                 @forelse ($recentLogs as $log)
-                    <tr>
-                        <td class="px-5 py-3.5 text-gray-700">{{ $log->user->name ?? 'Deleted User' }}</td>
-                        <td class="px-5 py-3.5 text-gray-500 max-w-xs truncate">{{ $log->prompt_text }}</td>
-                        <td class="px-5 py-3.5">
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-3 md:px-5 py-3 text-gray-700">
+                            <span class="text-xs md:text-sm">{{ $log->user->name ?? 'Deleted User' }}</span>
+                        </td>
+                        <td class="px-3 md:px-5 py-3 text-gray-500 max-w-xs hidden md:table-cell">
+                            <span class="truncate text-xs md:text-sm" title="{{ $log->prompt_text }}">{{ $log->prompt_text }}</span>
+                        </td>
+                        <td class="px-3 md:px-5 py-3">
                             @php
                                 $badgeColor = match($log->status) {
                                     'success' => 'bg-green-100 text-green-600',
@@ -94,9 +98,15 @@
                             @endphp
                             <span class="text-xs px-2 py-0.5 rounded-full {{ $badgeColor }} capitalize">{{ $log->status }}</span>
                         </td>
-                        <td class="px-5 py-3.5 text-gray-500">{{ $log->tokens_used }}</td>
-                        <td class="px-5 py-3.5 text-gray-500">{{ $log->execution_time_ms }}ms</td>
-                        <td class="px-5 py-3.5 text-gray-400 text-xs">{{ $log->created_at->diffForHumans() }}</td>
+                        <td class="px-3 md:px-5 py-3 text-gray-500 hidden lg:table-cell">
+                            <span class="text-xs md:text-sm">{{ $log->tokens_used }}</span>
+                        </td>
+                        <td class="px-3 md:px-5 py-3 text-gray-500 hidden lg:table-cell">
+                            <span class="text-xs md:text-sm">{{ $log->execution_time_ms }}ms</span>
+                        </td>
+                        <td class="px-3 md:px-5 py-3 text-gray-400">
+                            <span class="text-xs">{{ $log->created_at->diffForHumans() }}</span>
+                        </td>
                     </tr>
                 @empty
                     <tr>
